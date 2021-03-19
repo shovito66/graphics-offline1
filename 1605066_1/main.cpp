@@ -478,7 +478,7 @@ void keyboardListener(unsigned char key, int x,int y){
             break;
         case 'w':
             fullBodyAngle -= 0.8;
-            cout<<"fullBodyAngle\t:"<<fullBodyAngle<<endl;
+            //cout<<"fullBodyAngle\t:"<<fullBodyAngle<<endl;
             if(fullBodyAngle<-fullBodyCutOffAngle){
                 fullBodyAngle = -fullBodyCutOffAngle;
             }

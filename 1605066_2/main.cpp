@@ -25,7 +25,7 @@ double speed = 0.0055; ///0.01---0.1
 double tempSpeed = 0.0;
 const double cutOffLowerSpeed = 0.005;
 const double cutOffUpperSpeed = 0.1;
-const int bubbleCreationtime = 2500;
+const int bubbleCreationtime = 2400;
 double cameraHeight;
 double cameraAngle;
 int drawgrid;

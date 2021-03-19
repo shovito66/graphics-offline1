@@ -234,3 +234,14 @@
 	<stddef.h>
 	<GL/gl.h>
 
+1616155635 source:d:\buet\l-4 t-1\cse 410 (graphics)\offline-1\offline-1\1605066_1\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+	<GL/glut.h>
+	<cmath>
+	<iostream>
+	<cstdlib>
+	<ctime>
+	<vector>
+

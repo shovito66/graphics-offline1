@@ -1,12 +1,13 @@
 #include<stdio.h>
 #include<stdlib.h>
-//#include<math.h>
+
 #include <windows.h>
 #include <GL/glut.h>
 #include <cmath>
 #include <iostream>
 #include <cstdlib>   // rand and srand
 #include <ctime>
+#include <vector>
 
 #define pi (2*acos(0.0))
 
@@ -59,6 +60,50 @@ Point3D l = Point3D(-value,-value,0);
 Point3D center(0,0,0);
 Point3D target(0,38,0);
 //float moveX = 100, moveY = 100.0, moveZ = 0.0;
+
+
+class AngleClass{
+public:
+    float fullBodyAngle;
+    float HalfBodyUpDownAngle;
+    float gunUpDownAngle;
+    float gunRotateAngle;
+
+    AngleClass(){
+        fullBodyAngle = 0.0;
+        HalfBodyUpDownAngle = 0.0;
+        gunUpDownAngle = 0.0;
+        gunRotateAngle = 0.0;
+    }
+};
+
+vector<AngleClass> saveCurrentAngles;
+
+void drawGunShoot(){
+    for(int i = 0; i < saveCurrentAngles.size(); i++) {
+        //cout << saveCurrentAngles[i].fullBodyAngle << endl;
+        glPushMatrix();
+        {   glRotatef(90,1,0,0);///added
+            glRotatef(saveCurrentAngles[i].fullBodyAngle,0,1,0);
+            glRotatef(saveCurrentAngles[i].HalfBodyUpDownAngle,1,0,0);
+            glRotatef(saveCurrentAngles[i].gunUpDownAngle,1,0,0);
+
+            glPointSize(5);
+            glColor3f(1,0 , 0);
+            //glRotatef(-90,1,0,0);
+            //glTranslatef(0,0,175);
+            glTranslatef(0,0,-98);
+            glBegin(GL_POINTS);
+            {
+               glVertex3f(0,0,-40);
+            }
+            glEnd();
+        }
+        glPopMatrix();
+    }
+
+
+}
 
 void drawAxes()
 {
@@ -535,13 +580,26 @@ void specialKeyListener(int key, int x,int y){
 void mouseListener(int button, int state, int x, int y){	//x, y is the x-y of the screen (2D)
 	switch(button){
 		case GLUT_LEFT_BUTTON:
+		    if(state == GLUT_DOWN){
+                /*
+                cout<<"Current Angle----\nfullBodyAngle:"<<fullBodyAngle<<"\tHalfBodyUpDownAngle:"
+                <<HalfBodyUpDownAngle<<"\tgunUpDownAngle:"<<gunUpDownAngle<<"\tgunRotateAngle:"<<gunRotateAngle<<endl;
+                */
+                AngleClass currentAngle;
+                currentAngle.fullBodyAngle = fullBodyAngle;
+                currentAngle.HalfBodyUpDownAngle = HalfBodyUpDownAngle;
+                currentAngle.gunUpDownAngle = gunUpDownAngle;
+                currentAngle.gunRotateAngle = gunRotateAngle;
+
+                saveCurrentAngles.push_back(currentAngle);
+                //getAllCurrentAngles();
+		    }
+            break;
+
+		case GLUT_RIGHT_BUTTON:
 			if(state == GLUT_DOWN){		// 2 times?? in ONE click? -- solution is checking DOWN or UP
 				drawaxes=1-drawaxes;
 			}
-			break;
-
-		case GLUT_RIGHT_BUTTON:
-			//........
 			break;
 
 		case GLUT_MIDDLE_BUTTON:
@@ -552,8 +610,6 @@ void mouseListener(int button, int state, int x, int y){	//x, y is the x-y of th
 			break;
 	}
 }
-
-
 
 
 void display(){
@@ -599,7 +655,6 @@ void display(){
         drawLowerHemiSphere(15,80,80);
 
         glTranslatef(0,0,-20);
-        //glRotatef(90,1,0,0);
         glRotatef(gunUpDownAngle,1,0,0); ///it will work for a/s rotate WRT x axis
         glRotatef(gunRotateAngle,0,0,1); ///it will work for d/f rotate WRT own axis
         drawUpperHemiSphere(5,80,80);
@@ -613,12 +668,18 @@ void display(){
         glRotatef(-90,1,0,0);
         glTranslatef(0,50,0);
         glColor3f(1,0,0);
+
+/**<
+Testing Purpose:
+
         glBegin(GL_LINES);
         {
             glVertex3f(center.x,center.y,center.z);
             glVertex3f(target.x,target.y,target.z);
         }
         glEnd();
+ */
+
 
     }
     glPopMatrix();
@@ -631,6 +692,9 @@ void display(){
         drawPlaneSheet();
     }
     glPopMatrix();
+
+    drawGunShoot();
+
 	glutSwapBuffers();
 }
 
